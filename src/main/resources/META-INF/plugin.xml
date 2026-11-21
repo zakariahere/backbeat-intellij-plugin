@@ -1,0 +1,116 @@
+<idea-plugin>
+    <id>dev.spotidea</id>
+    <name>Backbeat</name>
+    <vendor>Backbeat contributors</vendor>
+
+    <description><![CDATA[
+        <p>Control Spotify without leaving your editor. Backbeat is a remote control for the Spotify app
+        running on your computer, phone or speaker, built for people who live in the IDE.</p>
+        <ul>
+            <li><b>Player tool window</b>: cover art, play, pause, skip, seek, shuffle, repeat, like, volume and device switching.</li>
+            <li><b>Search Everywhere tab</b>: press Shift twice, open the Spotify tab, type, hit Enter.</li>
+            <li><b>Library and queue</b>: your playlists, Liked Songs, recently played and what is up next.</li>
+            <li><b>Status bar</b>: the current song, a click-through mini player, scroll to change volume.</li>
+            <li><b>Keyboard shortcuts</b> for every control, all rebindable.</li>
+            <li><b>Pause on breakpoint</b>: silence while you debug, music back when the program continues.</li>
+            <li><b>Project soundtrack</b>: pin an album or playlist to a project.</li>
+            <li><b>Focus sessions</b>: a Pomodoro timer that plays while you focus and goes quiet for the break.</li>
+        </ul>
+        <p>You connect with your own free Spotify Client ID (a one-minute setup, explained in the tool window).
+        Controlling playback requires Spotify Premium; that is a Spotify Web API rule.</p>
+        <p>This is an independent, open-source project. It is not affiliated with, sponsored or endorsed by Spotify.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Backbeat" anchor="right" icon="/icons/toolwindow.svg"
+                    factoryClass="dev.spotidea.ui.SpotideaToolWindowFactory"/>
+        <statusBarWidgetFactory id="SpotideaNowPlaying"
+                                implementation="dev.spotidea.statusbar.NowPlayingWidgetFactory"/>
+        <searchEverywhereContributor implementation="dev.spotidea.search.SpotifySearchContributorFactory"/>
+        <applicationConfigurable parentId="tools" id="dev.spotidea.settings" displayName="Backbeat"
+                                 instance="dev.spotidea.settings.SpotideaConfigurable"/>
+        <notificationGroup id="Backbeat" displayType="BALLOON"/>
+        <postStartupActivity implementation="dev.spotidea.dev.SoundtrackStartup"/>
+    </extensions>
+
+    <projectListeners>
+        <listener class="dev.spotidea.dev.DebuggerPauseListener"
+                  topic="com.intellij.xdebugger.XDebuggerManagerListener"/>
+    </projectListeners>
+
+    <actions>
+        <action id="Spotidea.PlayPause" class="dev.spotidea.actions.PlayPauseAction"
+                text="Play / Pause" description="Play or pause Spotify" icon="dev.spotidea.SpotideaIcons.Play">
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt shift P"/>
+        </action>
+        <action id="Spotidea.Next" class="dev.spotidea.actions.NextTrackAction"
+                text="Next Song" description="Skip to the next song" icon="dev.spotidea.SpotideaIcons.Next">
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt shift PERIOD"/>
+        </action>
+        <action id="Spotidea.Previous" class="dev.spotidea.actions.PreviousTrackAction"
+                text="Previous Song" description="Restart the song, or go to the previous one"
+                icon="dev.spotidea.SpotideaIcons.Previous">
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt shift COMMA"/>
+        </action>
+        <action id="Spotidea.Shuffle" class="dev.spotidea.actions.ToggleShuffleAction"
+                text="Shuffle" description="Turn shuffle on or off" icon="dev.spotidea.SpotideaIcons.Shuffle"/>
+        <action id="Spotidea.Repeat" class="dev.spotidea.actions.CycleRepeatAction"
+                text="Repeat" description="Cycle through repeat off, all and this song"
+                icon="dev.spotidea.SpotideaIcons.Repeat"/>
+        <action id="Spotidea.Like" class="dev.spotidea.actions.ToggleLikeAction"
+                text="Save to Liked Songs" description="Save the current song to, or remove it from, your Liked Songs"
+                icon="dev.spotidea.SpotideaIcons.Heart"/>
+        <action id="Spotidea.VolumeUp" class="dev.spotidea.actions.VolumeUpAction"
+                text="Volume Up" description="Raise the Spotify volume"/>
+        <action id="Spotidea.VolumeDown" class="dev.spotidea.actions.VolumeDownAction"
+                text="Volume Down" description="Lower the Spotify volume"/>
+        <action id="Spotidea.Search" class="dev.spotidea.actions.SearchSpotifyAction"
+                text="Search Spotify..." description="Search songs, albums, artists and playlists"
+                icon="AllIcons.Actions.Find"/>
+        <action id="Spotidea.CopyLink" class="dev.spotidea.actions.CopySongLinkAction"
+                text="Copy Link to Current Song" description="Copy a shareable link to what is playing"/>
+        <action id="Spotidea.FocusSession" class="dev.spotidea.actions.FocusSessionAction"
+                text="Start Focus Session" description="Music while you focus, silence for the break"
+                icon="dev.spotidea.SpotideaIcons.Focus"/>
+        <action id="Spotidea.PinSoundtrack" class="dev.spotidea.actions.PinSoundtrackAction"
+                text="Use Current Album or Playlist as Project Soundtrack"
+                description="Remember what is playing as the soundtrack of this project"/>
+        <action id="Spotidea.PlaySoundtrack" class="dev.spotidea.actions.PlaySoundtrackAction"
+                text="Play Project Soundtrack" description="Play the album or playlist pinned to this project"/>
+        <action id="Spotidea.OpenSettings" class="dev.spotidea.actions.OpenSettingsAction"
+                text="Backbeat Settings..." description="Open the Backbeat settings"
+                icon="AllIcons.General.GearPlain"/>
+
+        <!-- The transport bar shown in the tool window and the mini player. -->
+        <group id="Spotidea.PlayerControls">
+            <reference ref="Spotidea.Shuffle"/>
+            <reference ref="Spotidea.Previous"/>
+            <reference ref="Spotidea.PlayPause"/>
+            <reference ref="Spotidea.Next"/>
+            <reference ref="Spotidea.Repeat"/>
+            <separator/>
+            <reference ref="Spotidea.Like"/>
+        </group>
+
+        <group id="Spotidea.Menu" text="Backbeat" popup="true" icon="dev.spotidea.SpotideaIcons.Note">
+            <reference ref="Spotidea.PlayPause"/>
+            <reference ref="Spotidea.Next"/>
+            <reference ref="Spotidea.Previous"/>
+            <reference ref="Spotidea.Like"/>
+            <reference ref="Spotidea.VolumeUp"/>
+            <reference ref="Spotidea.VolumeDown"/>
+            <separator/>
+            <reference ref="Spotidea.Search"/>
+            <reference ref="Spotidea.CopyLink"/>
+            <separator/>
+            <reference ref="Spotidea.FocusSession"/>
+            <reference ref="Spotidea.PinSoundtrack"/>
+            <reference ref="Spotidea.PlaySoundtrack"/>
+            <separator/>
+            <reference ref="Spotidea.OpenSettings"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
+    </actions>
+</idea-plugin>
