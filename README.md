@@ -1,3 +1,5 @@
+<img src="src/main/resources/META-INF/pluginIcon.svg" width="88" align="right" alt="Backbeat logo">
+
 # Backbeat
 
 **Control Spotify without leaving your JetBrains IDE.**
@@ -9,7 +11,7 @@ IntelliJ IDEA (or any other JetBrains IDE, 2025.3 and newer).
 > [!IMPORTANT]
 > **Keep the Spotify desktop app open next to your IDE.** Backbeat is a remote control, not a
 > player: it tells Spotify what to do, and Spotify makes the sound. If the Spotify app is closed,
-> there is nothing to control and you will see "No Spotify device is online". Minimised or in the
+> there is nothing to control and you will see "Spotify is not running". Minimised or in the
 > tray is fine; it just has to be running and signed in to the same account.
 
 > Codename `spotidea`. Independent open-source project, not affiliated with or endorsed by Spotify.
@@ -61,14 +63,14 @@ Your browser opens for the login and you are done. The tool window shows the sam
 
 ### Good to know
 
-- **Spotify Premium is required to control playback** (play, skip, seek, volume). That is a rule of
-  the Spotify Web API for every third-party player. Search, Now Playing and the library still work
-  without it. Spotify also requires the *owner* of a development-mode app to have Premium.
+- **Spotify Premium is required.** Spotify only lets Premium accounts be controlled from other
+  apps, and it also requires the owner of a development-mode app (that is you, with your own
+  Client ID) to have Premium.
 - **The Spotify desktop app must be open** (see the note at the top). Backbeat sends commands; it
   does not produce sound. The Spotify web player needs DRM that the IDE's embedded browser does not
   have, so in-IDE audio is not possible. Tip: once the desktop app is running, the device picker
   also lets you send the music to your phone or a speaker.
-- **"No Spotify device is online"?** Open the Spotify desktop app and press play there once.
+- **"Spotify is not running" although it is?** Open the Spotify desktop app and press play there once.
   Spotify forgets idle devices after a while; one press wakes it up, and Backbeat takes over again.
 - If port 43897 is taken, change it in **Settings \| Tools \| Backbeat** and in your Spotify app.
 
@@ -118,8 +120,21 @@ visible UIs cost the same API quota as one.
 
 ### Releasing
 
-Signing and publishing read their secrets from the environment: `CERTIFICATE_CHAIN`, `PRIVATE_KEY`,
-`PRIVATE_KEY_PASSWORD` for `signPlugin`, and `PUBLISH_TOKEN` for `publishPlugin`.
+The **first** version has to be uploaded by hand; JetBrains reviews it (usually a couple of working days):
+
+1. `./gradlew clean buildPlugin verifyPlugin`
+2. Sign in at <https://plugins.jetbrains.com> and open **Upload plugin**.
+3. Upload `build/distributions/spotidea-<version>.zip`, pick the MIT license and a category, and link this repository.
+
+Later versions can go out from the command line. Create a token under **My Tokens** on the
+Marketplace, bump `pluginVersion` in `gradle.properties`, add a `change-notes` entry in `plugin.xml`, then:
+
+```
+PUBLISH_TOKEN=<token> ./gradlew publishPlugin
+```
+
+Signing is optional (the Marketplace accepts unsigned uploads); to sign, provide `CERTIFICATE_CHAIN`,
+`PRIVATE_KEY` and `PRIVATE_KEY_PASSWORD` in the environment and run `signPlugin`.
 
 ## License
 

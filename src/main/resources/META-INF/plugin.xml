@@ -1,25 +1,58 @@
 <idea-plugin>
     <id>dev.spotidea</id>
     <name>Backbeat</name>
-    <vendor>Backbeat contributors</vendor>
+    <vendor url="https://github.com/zakariahere/backbeat-intellij-plugin">Zakaria</vendor>
 
     <description><![CDATA[
-        <p>Control Spotify without leaving your editor. Backbeat is a remote control for the Spotify app
-        running on your computer, phone or speaker, built for people who live in the IDE.</p>
+        <p><b>Control Spotify without leaving your editor.</b> Search, skip, queue and like songs from the IDE
+        while the music keeps playing in your Spotify app.</p>
+
+        <p><b>IMPORTANT: read this before you install.</b> Backbeat needs three things to work:</p>
+        <ol>
+            <li><b>The Spotify desktop app must be open.</b> Backbeat is a remote control, not a music player.
+            It tells your Spotify app what to play, and Spotify makes the sound. Keep the Spotify desktop app
+            running next to your IDE (minimised or in the tray is fine), signed in to the same account.
+            If Spotify is closed, there is nothing to control and nothing will play.</li>
+            <li><b>Spotify Premium.</b> Spotify only allows Premium accounts to be controlled from other apps.</li>
+            <li><b>Your own free Spotify Client ID.</b> A one-minute, one-time setup. The Backbeat tool window
+            walks you through it step by step.</li>
+        </ol>
+
+        <p><b>What you get</b></p>
         <ul>
             <li><b>Player tool window</b>: cover art, play, pause, skip, seek, shuffle, repeat, like, volume and device switching.</li>
-            <li><b>Search Everywhere tab</b>: press Shift twice, open the Spotify tab, type, hit Enter.</li>
+            <li><b>Search Everywhere tab</b>: press Shift twice, open the Spotify tab, type, hit Enter. Shift+Enter adds to the queue.</li>
             <li><b>Library and queue</b>: your playlists, Liked Songs, recently played and what is up next.</li>
-            <li><b>Status bar</b>: the current song, a click-through mini player, scroll to change volume.</li>
-            <li><b>Keyboard shortcuts</b> for every control, all rebindable.</li>
+            <li><b>Status bar</b>: the current song. Click for a mini player, middle-click to play or pause, scroll to change the volume.</li>
+            <li><b>Keyboard shortcuts</b> for every control, all rebindable in Keymap.</li>
+        </ul>
+
+        <p><b>Made for coding</b></p>
+        <ul>
             <li><b>Pause on breakpoint</b>: silence while you debug, music back when the program continues.</li>
-            <li><b>Project soundtrack</b>: pin an album or playlist to a project.</li>
+            <li><b>Project soundtrack</b>: pin an album or playlist to a project and start it when the project opens.</li>
             <li><b>Focus sessions</b>: a Pomodoro timer that plays while you focus and goes quiet for the break.</li>
         </ul>
-        <p>You connect with your own free Spotify Client ID (a one-minute setup, explained in the tool window).
-        Controlling playback requires Spotify Premium; that is a Spotify Web API rule.</p>
-        <p>This is an independent, open-source project. It is not affiliated with, sponsored or endorsed by Spotify.</p>
+
+        <p><b>Privacy</b>: Backbeat talks only to Spotify. Login uses OAuth with PKCE, so your password never
+        reaches the IDE and there is no client secret. Your session token is kept in the IDE password safe.
+        No analytics, no telemetry.</p>
+
+        <p>Why your own Client ID? Spotify limits every third-party app in development mode to five users,
+        so a plugin cannot ship a shared one.</p>
+
+        <p>Backbeat is an independent open-source project. It is not affiliated with, sponsored or endorsed by Spotify.
+        Spotify is a trademark of Spotify AB.</p>
     ]]></description>
+
+    <change-notes><![CDATA[
+        <p><b>0.1.0</b>: first release.</p>
+        <ul>
+            <li>Player tool window, status bar widget and mini player</li>
+            <li>Spotify tab in Search Everywhere, library and queue browsing</li>
+            <li>Pause on breakpoint, project soundtrack and focus sessions</li>
+        </ul>
+    ]]></change-notes>
 
     <depends>com.intellij.modules.platform</depends>
 

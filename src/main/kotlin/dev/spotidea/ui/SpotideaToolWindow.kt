@@ -89,6 +89,13 @@ class SetupPanel : JPanel(BorderLayout()) {
             row { label("Connect your Spotify").bold() }
             row {
                 text(
+                    "<b>Keep the Spotify desktop app open.</b> Backbeat is a remote control: it tells Spotify " +
+                        "what to play, and Spotify makes the sound. Spotify Premium is required.",
+                    maxLineLength = wrap,
+                )
+            }
+            row {
+                text(
                     "Spotify caps every third-party app at a handful of users, so Backbeat runs on " +
                         "<b>your own</b> free Client ID. It takes about a minute, once.",
                     maxLineLength = wrap,

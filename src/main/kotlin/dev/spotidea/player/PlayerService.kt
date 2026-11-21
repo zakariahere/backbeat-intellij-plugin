@@ -284,11 +284,11 @@ class PlayerService(private val cs: CoroutineScope) {
     private fun report(e: Exception) {
         when {
             e is SpotifyException && e.isNoActiveDevice -> Notifier.warnThrottled(
-                "No Spotify device is online. Open Spotify on this computer or your phone, then try again.",
+                "Spotify is not running. Open the Spotify desktop app (and press play there once if it has been idle), then try again.",
                 actions = arrayOf("Open Spotify" to ::openSpotifyApp),
             )
             e is SpotifyException && e.isPremiumRequired -> Notifier.warnThrottled(
-                "Spotify only lets Premium accounts control playback from other apps. Now Playing and search still work.",
+                "Spotify only lets Premium accounts control playback from other apps.",
                 quietMs = 3_600_000,
             )
             e is SpotifyException && e.isRateLimited -> thisLogger().info("Spotify rate limit: ${e.message}")
