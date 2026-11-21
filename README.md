@@ -4,6 +4,13 @@
 
 **Control Spotify without leaving your JetBrains IDE.**
 
+[![JetBrains Marketplace](https://img.shields.io/jetbrains/plugin/v/36354?label=Marketplace&logo=jetbrains)](https://plugins.jetbrains.com/plugin/36354)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/36354)](https://plugins.jetbrains.com/plugin/36354)
+[![Rating](https://img.shields.io/jetbrains/plugin/r/stars/36354)](https://plugins.jetbrains.com/plugin/36354)
+[![Build](https://github.com/zakariahere/backbeat-intellij-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/zakariahere/backbeat-intellij-plugin/actions/workflows/build.yml)
+
+**[Get Backbeat from the JetBrains Marketplace](https://plugins.jetbrains.com/plugin/36354)**, or in your IDE: **Settings \| Plugins \| Marketplace**, search for **Backbeat**.
+
 Backbeat is a remote control for Spotify, built for people who live in the editor. The music keeps
 playing in the Spotify app on your computer, phone or speaker; you search, skip and queue from
 IntelliJ IDEA (or any other JetBrains IDE, 2025.3 and newer).
@@ -15,6 +22,12 @@ IntelliJ IDEA (or any other JetBrains IDE, 2025.3 and newer).
 > tray is fine; it just has to be running and signed in to the same account.
 
 > Codename `spotidea`. Independent open-source project, not affiliated with or endorsed by Spotify.
+
+![Backbeat docked next to the editor in IntelliJ IDEA: current song, playback controls and playlists](docs/screenshots/ide.jpg)
+
+| Browse a playlist | Settings |
+|---|---|
+| ![Backbeat tool window showing the tracks of a playlist with cover art and durations](docs/screenshots/library.png) | ![Backbeat settings: callback port, connection state, pause on breakpoint, project soundtrack and focus session](docs/screenshots/settings.png) |
 
 ## What you get
 
@@ -120,21 +133,23 @@ visible UIs cost the same API quota as one.
 
 ### Releasing
 
-The **first** version has to be uploaded by hand; JetBrains reviews it (usually a couple of working days):
+Releases are cut by pushing a tag. The [Release workflow](.github/workflows/release.yml) tests, builds,
+publishes to the Marketplace stable channel and attaches the zip to a GitHub Release.
 
-1. `./gradlew clean buildPlugin verifyPlugin`
-2. Sign in at <https://plugins.jetbrains.com> and open **Upload plugin**.
-3. Upload `build/distributions/spotidea-<version>.zip`, pick the MIT license and a category, and link this repository.
+1. Bump `pluginVersion` in `gradle.properties` and add a `change-notes` entry in `plugin.xml`.
+2. Commit, then tag with the same version and push:
 
-Later versions can go out from the command line. Create a token under **My Tokens** on the
-Marketplace, bump `pluginVersion` in `gradle.properties`, add a `change-notes` entry in `plugin.xml`, then:
+   ```
+   git tag v0.1.1
+   git push origin main v0.1.1
+   ```
 
-```
-PUBLISH_TOKEN=<token> ./gradlew publishPlugin
-```
+The workflow refuses to run if the tag and `pluginVersion` differ. It needs one repository secret,
+`PUBLISH_TOKEN`, created under **My Tokens** on the Marketplace. Signing is optional: add
+`CERTIFICATE_CHAIN`, `PRIVATE_KEY` and `PRIVATE_KEY_PASSWORD` as secrets to enable it.
 
-Signing is optional (the Marketplace accepts unsigned uploads); to sign, provide `CERTIFICATE_CHAIN`,
-`PRIVATE_KEY` and `PRIVATE_KEY_PASSWORD` in the environment and run `signPlugin`.
+Every push and pull request also runs the [Build workflow](.github/workflows/build.yml), which uploads
+the plugin zip and the UI preview images as artifacts.
 
 ## License
 

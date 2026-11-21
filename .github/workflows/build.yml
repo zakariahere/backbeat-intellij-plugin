@@ -1,0 +1,45 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v6
+
+      # Unit tests plus the headless smoke tests that boot the plugin inside a test IDE.
+      - name: Test and build
+        run: ./gradlew test buildPlugin
+
+      - name: Upload plugin zip
+        uses: actions/upload-artifact@v7
+        with:
+          name: backbeat-plugin
+          path: build/distributions/*.zip
+          if-no-files-found: error
+
+      - name: Upload UI previews
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-preview
+          path: build/ui-preview/*.png
+          if-no-files-found: ignore
